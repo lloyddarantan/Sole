@@ -77,8 +77,6 @@ pnpm -v
 #### 2. Install Project Dependencies
 
 ```bash
-pnpm create vite frontend --template react-ts
-cd frontend
 pnpm install
 ```
 
