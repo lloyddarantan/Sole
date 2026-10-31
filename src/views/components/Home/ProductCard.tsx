@@ -1,4 +1,4 @@
-
+import { useNavigate } from 'react-router-dom'
 import { Heart } from 'lucide-react'
 import type { Product } from '../../../models/Product'
 
@@ -15,8 +15,18 @@ export default function ProductCard({
   onToggleFavorite,
   onAddToCart,
 }: ProductCardProps) {
+  const navigate = useNavigate()
+
+  // Navigate to product datasheet/catalog page
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`)
+  }
+
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-100 bg-white">
+    <article 
+      onClick={handleCardClick}
+      className="cursor-pointer overflow-hidden rounded-xl border border-gray-100 bg-white transition-all hover:shadow-md"
+    >
       <div className="relative flex h-[100px] items-center justify-center bg-[#f4f4f4] sm:h-[115px]">
         <img
           src={product.image}
@@ -25,11 +35,15 @@ export default function ProductCard({
           loading="lazy"
         />
 
+        {/* Favorite Button: e.stopPropagation() prevents triggering handleCardClick */}
         <button
           type="button"
           aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           aria-pressed={isFavorite}
-          onClick={() => onToggleFavorite(product.id)}
+          onClick={(e) => {
+            e.stopPropagation()
+            onToggleFavorite(product.id)
+          }}
           className="absolute right-2 top-2 text-sole-blue transition hover:scale-110"
         >
           <Heart
@@ -54,9 +68,13 @@ export default function ProductCard({
         </p>
 
         <div className="mt-2 flex justify-end">
+          {/* Add to Cart Button: e.stopPropagation() prevents triggering handleCardClick */}
           <button
             type="button"
-            onClick={() => onAddToCart(product)}
+            onClick={(e) => {
+              e.stopPropagation()
+              onAddToCart(product)
+            }}
             className="rounded-sm bg-sole-blue px-3 py-1.5 text-[8px] text-white transition hover:bg-blue-800 sm:text-[9px]"
           >
             ADD TO CART

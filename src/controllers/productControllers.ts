@@ -1,71 +1,39 @@
-
+// src/controllers/productControllers.ts
 import type { Product } from '../models/Product'
 
 const products: Product[] = [
   {
     id: 1,
-    name: 'PUMA White-Dark Crimson-Gum',
+    name: 'INDOOR SNEAKERS UNISEX',
     price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
+    image: '/src/assets/images/sneakers.png',
     category: 'Sneakers',
     isNew: true,
+    styleCode: '401360_03',
+    color: 'PUMA WHITE-DARK CRIMSON-GUM',
+    description:
+      "FROM OUR MID '80S ARCHIVE, THE PUMA INDOOR WAS CREATED AS A UNIVERSAL INDOOR TRAINING SHOE. WITH ITS SOLID, CURVED MIDSOLE AND STURDY UPPER THE SHOE WAS AS APPEALING TO ATHLETS...",
+    stockCount: 1,
+    galleryImages: [
+      '/src/assets/images/sneakers.png',
+      '/src/assets/images/sneakers.png',
+      '/src/assets/images/sneakers.png',
+      '/src/assets/images/sneakers.png'
+    ]
   },
   {
     id: 2,
     name: 'PUMA White-Dark Crimson-Gum',
     price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
+    image: '/src/assets/images/sneakers.png',
     category: 'Sneakers',
     isNew: true,
-  },
-  {
-    id: 3,
-    name: 'PUMA White-Dark Crimson-Gum',
-    price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
-    category: 'Sneakers',
-    isNew: true,
-  },
-  {
-    id: 4,
-    name: 'PUMA White-Dark Crimson-Gum',
-    price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
-    category: 'Sneakers',
-    isNew: true,
-  },
-  {
-    id: 5,
-    name: 'PUMA White-Dark Crimson-Gum',
-    price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
-    category: 'Sneakers',
-    isNew: true,
-  },
-  {
-    id: 6,
-    name: 'PUMA White-Dark Crimson-Gum',
-    price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
-    category: 'Sneakers',
-    isNew: true,
-  },
-  {
-    id: 7,
-    name: 'PUMA White-Dark Crimson-Gum',
-    price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
-    category: 'Sneakers',
-    isNew: true,
-  },
-  {
-    id: 8,
-    name: 'PUMA White-Dark Crimson-Gum',
-    price: 5795,
-    image: '/images/products/puma-crimson-gum.png',
-    category: 'Sneakers',
-    isNew: true,
-  },
+    styleCode: '401360_03',
+    color: 'PUMA WHITE-DARK CRIMSON-GUM',
+    description: "Classic court sneaker with durable gum sole.",
+    stockCount: 5,
+    galleryImages: ['/src/assets/images/sneakers.png']
+  }
 ]
 
 export function getNewArrivals(): Product[] {
