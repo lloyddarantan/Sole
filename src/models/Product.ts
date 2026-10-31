@@ -6,7 +6,7 @@ export interface Product {
   image: string
   category: string
   isNew?: boolean
-  // Extended fields for Product Catalog View
+  // Jett:Nag add me for product catalog details
   styleCode?: string
   color?: string
   description?: string

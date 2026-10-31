@@ -1,5 +1,5 @@
-
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import {
   Search,
   Heart,
@@ -16,6 +16,7 @@ const navLinks = [
 ]
 
 export default function Navbar() {
+  const navigate = useNavigate()
   const [activeLink, setActiveLink] = useState('Home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -24,20 +25,20 @@ export default function Navbar() {
       <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
-        <a href="/" aria-label="SOLE home" className="shrink-0">
+        <Link to="/" aria-label="SOLE home" className="shrink-0">
           <img
             src="assets/images/sole-logo.png"
             alt="SOLE"
             className="h-14 w-24 object-contain sm:w-28"
           />
-        </a>
+        </Link>
 
         {/* Desktop navigation */}
         <nav className="hidden items-center gap-8 md:flex lg:gap-10">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
+              to={link.href}
               onClick={() => setActiveLink(link.label)}
               className={`border-b-2 px-1 py-2 text-base transition ${
                 activeLink === link.label
@@ -46,17 +47,18 @@ export default function Navbar() {
               }`}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Actions */}
         <div className="flex items-center gap-3 sm:gap-5">
+          {/* UPDATED: Navigates to /search using React Router */}
           <button
             type="button"
             aria-label="Search products"
             className="transition hover:text-sole-blue"
-            onClick={() => window.location.assign('/shop')}
+            onClick={() => navigate('/search')}
           >
             <Search size={25} strokeWidth={2.4} />
           </button>
@@ -65,7 +67,7 @@ export default function Navbar() {
             type="button"
             aria-label="Favorites"
             className="transition hover:text-sole-blue"
-            onClick={() => window.location.assign('/favorites')}
+            onClick={() => navigate('/favorites')}
           >
             <Heart size={25} strokeWidth={2.4} />
           </button>
@@ -74,7 +76,7 @@ export default function Navbar() {
             type="button"
             aria-label="Shopping bag"
             className="transition hover:text-sole-blue"
-            onClick={() => window.location.assign('/cart')}
+            onClick={() => navigate('/cart')}
           >
             <ShoppingBag size={25} strokeWidth={2.4} />
           </button>
@@ -83,7 +85,7 @@ export default function Navbar() {
             type="button"
             aria-label="User profile"
             className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-600 font-bold text-white shadow-sm"
-            onClick={() => window.location.assign('/profile')}
+            onClick={() => navigate('/profile')}
           >
             J
           </button>
@@ -105,9 +107,9 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <nav className="absolute left-0 top-full flex w-full flex-col border-t bg-white p-4 shadow-lg md:hidden">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
+              to={link.href}
               onClick={() => {
                 setActiveLink(link.label)
                 setMobileMenuOpen(false)
@@ -115,7 +117,7 @@ export default function Navbar() {
               className="border-b border-gray-100 px-3 py-3 hover:bg-gray-50"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
       )}

@@ -11,8 +11,9 @@ import ContactUs from './views/pages/ContactUs'
 import { LoginPage } from './views/pages/Login'
 import { SignUpPage } from './views/pages/Signup'
 
-// Jett: ADDED Import Product Catalog Details Page
+// Jett: ADDED Import Product Catalog Details Page & Search Page
 import ProductCatalog from './views/pages/ProductCatalog'
+import SearchPage from './views/pages/Searchpage'
 
 function PlaceholderPage({ title }: { title: string }) {
   return (
@@ -45,6 +46,9 @@ function MainLayout() {
         <Route path="/favorites" element={<PlaceholderPage title="Favorites" />} />
         <Route path="/cart" element={<ShoppingCartView />} />
         <Route path="/profile" element={<Profile />} />
+
+        {/* Jett: ADDED: Route for Search Page */}
+        <Route path="/search" element={<SearchPage />} />
 
         {/* Jett: ADDED: Route for Product Datasheet/Catalog Page */}
         <Route path="/product/:id" element={<ProductCatalog />} />

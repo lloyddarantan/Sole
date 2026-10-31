@@ -17,7 +17,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const navigate = useNavigate()
 
-  // Navigate to product datasheet/catalog page
+  // Jett: Navigate to product datasheet/catalog page
   const handleCardClick = () => {
     navigate(`/product/${product.id}`)
   }
@@ -35,7 +35,7 @@ export default function ProductCard({
           loading="lazy"
         />
 
-        {/* Favorite Button: e.stopPropagation() prevents triggering handleCardClick */}
+        {/* Jett: Favorite Button: e.stopPropagation() prevents triggering handleCardClick */}
         <button
           type="button"
           aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
@@ -68,7 +68,7 @@ export default function ProductCard({
         </p>
 
         <div className="mt-2 flex justify-end">
-          {/* Add to Cart Button: e.stopPropagation() prevents triggering handleCardClick */}
+          {/* Jett: Add to Cart Button: e.stopPropagation() prevents triggering handleCardClick */}
           <button
             type="button"
             onClick={(e) => {

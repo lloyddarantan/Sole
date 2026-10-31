@@ -43,3 +43,21 @@ export function getNewArrivals(): Product[] {
 export function getProductById(id: number): Product | undefined {
   return products.find((product) => product.id === id)
 }
+
+// Jett: ADDED search helper function for SearchPage
+export function searchProducts(query: string, category?: string): Product[] {
+  const searchTerm = query.toLowerCase().trim()
+
+  return products.filter((product) => {
+    const matchesQuery =
+      !searchTerm ||
+      product.name.toLowerCase().includes(searchTerm) ||
+      product.category.toLowerCase().includes(searchTerm)
+
+    const matchesCategory =
+      !category ||
+      product.category.toLowerCase() === category.toLowerCase()
+
+    return matchesQuery && matchesCategory
+  })
+}

@@ -1,4 +1,3 @@
-// src/views/components/Auth/AuthLayout.tsx
 import React from 'react';
 
 interface AuthLayoutProps {
@@ -7,7 +6,7 @@ interface AuthLayoutProps {
   onTabChange: (tab: 'login' | 'signup') => void;
 }
 
-export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, activeTab, onTabChange }) => {
+export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
     <div className="w-screen h-screen flex flex-col md:flex-row bg-white overflow-hidden">
       {/* Left Panel */}
@@ -22,24 +21,6 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, activeTab, onT
             alt="Air Jordan Sneaker"
             className="w-4/5 max-w-md object-contain drop-shadow-2xl"
           />
-          <div className="absolute right-0 flex flex-col gap-2">
-            <button
-              onClick={() => onTabChange('login')}
-              className={`px-5 py-2 rounded-l-full text-sm font-semibold transition-all ${
-                activeTab === 'login' ? 'bg-white text-[#2B41A7]' : 'bg-[#1E2E78] text-white'
-              }`}
-            >
-              Login
-            </button>
-            <button
-              onClick={() => onTabChange('signup')}
-              className={`px-5 py-2 rounded-l-full text-sm font-semibold transition-all ${
-                activeTab === 'signup' ? 'bg-white text-[#2B41A7]' : 'bg-[#1E2E78] text-white'
-              }`}
-            >
-              Sign Up
-            </button>
-          </div>
         </div>
         <p className="text-xs text-blue-200">© Sole Inc. All Rights Reserved.</p>
       </div>
