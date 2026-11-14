@@ -106,34 +106,6 @@ export default function AdminSidebar({
           </div>
         ))}
       </nav>
-
-      {/* Admin Profile */}
-      <div className="border-t border-gray-100 p-4">
-        <div className="mb-4 flex items-center gap-3 rounded-lg bg-[#F5F6F8] p-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A8C] text-sm font-bold text-white">
-            A
-          </div>
-
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-gray-800">
-              Admin
-            </p>
-            <p className="text-xs text-gray-500">
-              Administrator
-            </p>
-          </div>
-        </div>
-
-        <button
-          onClick={() => {
-            window.location.href = '/login'
-          }}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#D7192D] transition hover:bg-red-50"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-      </div>
     </aside>
   )
 }

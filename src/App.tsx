@@ -11,6 +11,7 @@ import { AuthPromptProvider } from './context/AuthPromptContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 import AdminRoute from './routes/AdminRoute';
 import GuestRoute from './routes/GuestRoute';
+import CustomerRoute from './routes/CustomerRoute';
 import Navbar from './views/components/Home/Navbar';
 import Footer from './views/components/Home/Footer';
 import HomePage from './views/pages/HomePage';
@@ -65,7 +66,7 @@ function App() {
               {/* Signup remains accessible for OTP verification */}
               <Route path="/signup" element={<SignUpPage />} />
 
-              {/* Public pages */}
+              {/* guest pages */}
               <Route path="/" element={<HomePage />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/about" element={<AboutUs />} />
@@ -73,15 +74,17 @@ function App() {
               <Route path="/faqs" element={<FAQPage />} />
               <Route path="/product/:id" element={<ProductCatalog />} />
 
-              {/* Customer-only pages */}
+              {/* customer pages */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/cart" element={<ShoppingCartView />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route element={<CustomerRoute />}>
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/cart" element={<ShoppingCartView />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                </Route>
               </Route>
 
-              {/* Admin-only pages */}
+              {/* admin pages */}
               <Route element={<ProtectedRoute />}>
                 <Route element={<AdminRoute />}>
                   <Route
