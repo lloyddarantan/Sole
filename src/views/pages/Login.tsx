@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Loader2
 } from 'lucide-react';
-
 import { handleLogin } from '../../controllers/authController';
 import {
   completePasswordReset,
@@ -18,7 +17,7 @@ import {
 } from '../../controllers/otpController';
 import { AuthLayout } from '../components/Auth/AuthLayout';
 import { OTPModal } from '../components/Auth/OTPModal';
-
+import { supabase } from '../../lib/supabaseClient';
 type PasswordResetStep = 'email' | 'otp' | 'password' | 'complete';
 
 interface LoginErrors {
@@ -103,7 +102,6 @@ export const LoginPage: React.FC = () => {
   };
 
 
-
 const onLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
 
@@ -122,17 +120,56 @@ const onLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       return;
     }
 
-    navigate(
-      from?.pathname
-        ? {
-            pathname: from.pathname,
-            search: from.search || '',
-            hash: from.hash || '',
-          }
-        : '/',
-      { replace: true }
-    );
+    // Wait for the AuthContext to retrieve the user's role.
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
 
+    if (sessionError || !sessionData.session?.user) {
+      setErrors({
+        general: 'Unable to retrieve your login session.',
+      });
+      return;
+    }
+
+    const userId = sessionData.session.user.id;
+
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (roleError) {
+      console.error('Role retrieval error:', roleError);
+
+      setErrors({
+        general: 'Unable to verify your account role. Please try again.',
+      });
+      return;
+    }
+
+    if (roleData?.role === 'admin') {
+      navigate('/admin', { replace: true });
+      return;
+    }
+
+    if (roleData?.role === 'customer') {
+      navigate(
+        from?.pathname
+          ? {
+              pathname: from.pathname,
+              search: from.search || '',
+              hash: from.hash || '',
+            }
+          : '/',
+        { replace: true }
+      );
+      return;
+    }
+
+    setErrors({
+      general: 'Your account role could not be verified. Please contact support.',
+    });
 
   } catch (error) {
     console.error('Login submission error:', error);
@@ -145,7 +182,6 @@ const onLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsLoading(false);
   }
 };
-
 
 
 const handleForgotPassword = async (

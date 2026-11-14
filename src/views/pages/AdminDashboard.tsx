@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {
   TrendingUp,
   ShoppingBag,
@@ -7,15 +8,47 @@ import {
   Package,
   MoreHorizontal,
   ArrowUpRight,
+  LogOut,
+  Loader2,
 } from 'lucide-react'
 import AdminSidebar, {
   type AdminTab,
 } from '../components/Admin/AdminSidebar'
 import ProductManagement from '../components/Admin/ProductManagement';
 import { useAdminController } from '../../controllers/adminController'
+import { handleLogout } from '../../controllers/authController';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>('Dashboard')
+
+  const navigate = useNavigate();
+
+const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+const onLogout = async () => {
+  if (isLoggingOut) return;
+
+  setIsLoggingOut(true);
+
+  try {
+    const response = await handleLogout();
+
+    if (!response.success) {
+      alert(response.message || 'Unable to log out. Please try again.');
+      return;
+    }
+
+    navigate('/login', { replace: true });
+
+  } catch (error) {
+    console.error('Logout error:', error);
+
+    alert('Something went wrong while logging out.');
+
+  } finally {
+    setIsLoggingOut(false);
+  }
+};
   const {
     stats,
     revenueData,
@@ -79,20 +112,47 @@ export default function AdminDashboard() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-sm font-semibold text-gray-800">
-                Admin
-              </p>
-              <p className="text-xs text-gray-400">
-                Administrator
-              </p>
-            </div>
+          
+<div className="flex items-center gap-4">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A8C] font-bold text-white">
-              A
-            </div>
-          </div>
+  {/* Admin Information */}
+  <div className="text-right">
+    <p className="text-sm font-semibold text-gray-800">
+      Admin
+    </p>
+
+    <p className="text-xs text-gray-400">
+      Administrator
+    </p>
+  </div>
+
+  {/* Admin Avatar */}
+  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123A8C] font-bold text-white">
+    A
+  </div>
+
+  {/* Logout Button */}
+  <button
+    type="button"
+    onClick={onLogout}
+    disabled={isLoggingOut}
+    className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-[#D7192D] transition hover:bg-[#D7192D] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    {isLoggingOut ? (
+      <>
+        <Loader2 size={17} className="animate-spin" />
+        Logging out...
+      </>
+    ) : (
+      <>
+        <LogOut size={17} />
+        Logout
+      </>
+    )}
+  </button>
+
+</div>
+
         </header>
 
         <div className="p-8">
