@@ -77,16 +77,28 @@ export default function NewArrivals({
     }
   }
 
-  function handleAddToCart(product: Product) {
-    if (!requireLogin()) return;
+function handleAddToCart(product: Product) {
+  if (!requireLogin()) return;
 
-    addToCart(product, '1');
+  const availableVariant = product.variants?.find(
+    (variant) => variant.isActive && variant.stockQuantity > 0
+  );
 
+  if (!availableVariant) {
     showNotification(
-      `${product.name} added to your bag!`,
-      'success'
+      `${product.name} is currently unavailable.`,
+      'error'
     );
+    return;
   }
+
+  addToCart(product, availableVariant);
+
+  showNotification(
+    `${product.name} added to your bag!`,
+    'success'
+  );
+}
 
   return (
     <>
