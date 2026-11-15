@@ -76,18 +76,52 @@ export interface VariantFormData {
   is_active: boolean;
 }
 
-export interface DashboardOrder {
-  id: number;
-  customer: string;
-  product: string;
-  amount: number;
-  status: 'Paid' | 'Shipped' | 'Processing' | 'Pending';
+
+export interface DashboardStat {
+  title: string;
+  value: number;
+}
+
+export interface RevenueData {
+  month: string;
+  value: number;
+}
+
+export interface SalesStatus {
+  label: string;
+  value: number;
 }
 
 export interface DashboardProduct {
-  id: number;
+  id: string;
   name: string;
-  units: number;
+  sales: number;
   revenue: number;
 }
+
+export interface DashboardOrder {
+  id: string;
+  order_number: string;
+  customer: string;
+  product: string | null;
+  total: number;
+  status:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled'
+    | 'refunded';
+  created_at: string;
+}
+
+export interface AdminDashboardData {
+  stats: DashboardStat[];
+  revenueData: RevenueData[];
+  salesStatus: SalesStatus[];
+  products: DashboardProduct[];
+  orders: DashboardOrder[];
+}
+
 

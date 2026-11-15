@@ -146,6 +146,7 @@ Run these commands inside the frontend project directory.
 | `pnpm update` | Update dependencies within the allowed version ranges |
 | `pnpm dlx vercel deploy` | Preview deployment |
 | `pnpm dlx vercel deploy --prod` | Deploy in production |
+| `git merge origin/main` | Update branch |
 
 ### 🧹 ESLint Commands
 

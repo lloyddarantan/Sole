@@ -27,6 +27,7 @@ import ProductCatalog from './views/pages/ProductCatalog';
 import Checkout from './views/pages/Checkout';
 import Shop from './views/pages/Shop';
 import Favorites from './views/pages/Favorites';
+import HomeRoute from './routes/HomeRoute';
 
 function MainLayout() {
   const location = useLocation();
@@ -67,7 +68,7 @@ function App() {
               <Route path="/signup" element={<SignUpPage />} />
 
               {/* guest pages */}
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<HomeRoute />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactUs />} />

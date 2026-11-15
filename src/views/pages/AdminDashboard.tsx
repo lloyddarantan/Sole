@@ -1,22 +1,36 @@
 
-import { useState } from 'react'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  TrendingUp,
-  ShoppingBag,
-  Users,
-  Package,
-  MoreHorizontal,
   ArrowUpRight,
   LogOut,
   Loader2,
-} from 'lucide-react'
+   ShoppingBag,
+    TrendingUp,
+    Users,
+    Package,
+    MoreHorizontal
+} from 'lucide-react';
+
 import AdminSidebar, {
   type AdminTab,
-} from '../components/Admin/AdminSidebar'
+} from '../components/Admin/AdminSidebar';
+
 import ProductManagement from '../components/Admin/ProductManagement';
-import { useAdminController } from '../../controllers/adminController'
+
+import DashboardStats from '../components/Admin/Dashboard/DashboardStats';
+import RevenueChart from '../components/Admin/Dashboard/RevenueChart';
+import SalesStatus from '../components/Admin/Dashboard/SalesStatus';
+import TopProducts from '../components/Admin/Dashboard/TopProducts';
+import RecentOrders from '../components/Admin/Dashboard/RecentOrders';
+import OrderManagement from '../components/Admin/OrderManagement';
+
+import { useAdminController } from '../../controllers/adminController';
+import { useAdminDashboardController } from '../../controllers/adminDashboardController';
 import { handleLogout } from '../../controllers/authController';
+import { useAdminOrderController } from '../../controllers/adminOrderController';
+import type { EditableOrderStatus } from '../../models/AdminOrders';
+
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>('Dashboard')
@@ -49,13 +63,21 @@ const onLogout = async () => {
     setIsLoggingOut(false);
   }
 };
+
   const {
     stats,
     revenueData,
     salesStatus,
     products,
     orders,
+    months,
+    setMonths,
+    isLoading: isLoadingDashboard,
+    error: dashboardError,
+    loadDashboard,
+  } = useAdminDashboardController();
 
+  const {
     productList,
     brands,
     categories,
@@ -86,6 +108,28 @@ const onLogout = async () => {
     'bg-[#D7192D]',
     'bg-gray-300',
   ]
+
+  const {
+    orders: adminOrders,
+    isLoading: ordersLoading,
+    updatingOrderId,
+    error: ordersError,
+    loadOrders,
+    updateOrderStatus,
+  } = useAdminOrderController();
+
+  const handleUpdateOrderStatus = async (
+  orderId: string,
+  status: EditableOrderStatus
+) => {
+  const success = await updateOrderStatus(orderId, status);
+
+  if (success) {
+    await loadDashboard();
+  }
+
+  return success;
+};
 
   return (
     <div className="min-h-screen bg-[#F5F6F8]">
@@ -158,6 +202,7 @@ const onLogout = async () => {
         <div className="p-8">
 
           {activeTab === 'Dashboard' ? (
+
             <>
               {/* Dashboard Heading */}
               <div className="mb-8">
@@ -173,128 +218,38 @@ const onLogout = async () => {
                 </p>
               </div>
 
-              {/* Statistics Cards */}
-              <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
-                {stats.map((stat: any, index: number) => {
-                  const Icon = statIcons[index % statIcons.length]
+              {/* Dashboard Error */}
+              {dashboardError && (
+                <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  {dashboardError}
+                </div>
+              )}
 
-                  return (
-                    <div
-                      key={index}
-                      className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="rounded-lg bg-blue-50 p-3 text-[#123A8C]">
-                          <Icon size={22} />
-                        </div>
-
-                        <MoreHorizontal
-                          className="text-gray-400"
-                          size={20}
-                        />
-                      </div>
-
-                      <p className="mt-4 text-sm text-gray-500">
-                        {stat.title}
-                      </p>
-
-                      <h3 className="mt-1 text-2xl font-bold text-gray-800">
-                        {stat.value}
-                      </h3>
-
-                      <p className="mt-2 text-xs font-medium text-[#D7192D]">
-                        {stat.change}
-                      </p>
-                    </div>
-                  )
-                })}
-              </div>
+              {/* Statistics */}
+              {isLoadingDashboard ? (
+                <div className="mb-8 rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-gray-400">
+                  Loading dashboard statistics...
+                </div>
+              ) : (
+                <DashboardStats stats={stats} />
+              )}
 
               {/* Charts */}
               <div className="mb-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
+                <RevenueChart
+                  data={revenueData}
+                  months={months}
+                  onMonthsChange={setMonths}
+                  loading={isLoadingDashboard}
+                />
 
-                {/* Revenue Chart */}
-                <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm xl:col-span-2">
-                  <div className="mb-6 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-bold text-gray-800">
-                        Revenue Overview
-                      </h3>
-
-                      <p className="text-sm text-gray-400">
-                        Monthly revenue performance
-                      </p>
-                    </div>
-
-                    <button className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:border-[#123A8C] hover:text-[#123A8C]">
-                      This Year
-                    </button>
-                  </div>
-
-                  <div className="flex h-64 items-end justify-around gap-3 border-b border-gray-200 px-2">
-                    {revenueData.map((item: any, index: number) => (
-                      <div
-                        key={index}
-                        className="flex h-full flex-1 flex-col items-center justify-end gap-2"
-                      >
-                        <div
-                          className="w-full max-w-10 rounded-t-md bg-[#123A8C] transition hover:bg-[#D7192D]"
-                          style={{
-                            height: `${item.value}%`,
-                          }}
-                        />
-
-                        <span className="mb-2 text-xs text-gray-500">
-                          {item.month}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Sales Status */}
-                <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-                  <h3 className="font-bold text-gray-800">
-                    Sales Status
-                  </h3>
-
-                  <p className="mb-6 text-sm text-gray-400">
-                    Orders by status
-                  </p>
-
-                  <div className="space-y-5">
-                    {salesStatus.map((item: any, index: number) => (
-                      <div key={index}>
-                        <div className="mb-2 flex justify-between text-sm">
-                          <span className="text-gray-600">
-                            {item.label}
-                          </span>
-
-                          <span className="font-semibold text-gray-800">
-                            {item.value}%
-                          </span>
-                        </div>
-
-                        <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-                          <div
-                            className={`h-full rounded-full ${statusColors[index % statusColors.length]}`}
-                            style={{
-                              width: `${item.value}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <SalesStatus data={salesStatus} />
               </div>
 
-              {/* Products and Orders */}
+              {/* Products and Recent Orders */}
               <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-
-                {/* Top Products */}
-                <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-                  <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
                     <h3 className="font-bold text-gray-800">
                       Top Products
                     </h3>
@@ -308,33 +263,11 @@ const onLogout = async () => {
                     </button>
                   </div>
 
-                  <div className="space-y-4">
-                    {products.map((product: any, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-0"
-                      >
-                        <div>
-                          <p className="text-sm font-semibold text-gray-800">
-                            {product.name}
-                          </p>
-
-                          <p className="text-xs text-gray-400">
-                            {product.category}
-                          </p>
-                        </div>
-
-                        <p className="text-sm font-semibold text-[#D7192D]">
-                          {product.sales} sold
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <TopProducts products={products} />
                 </div>
 
-                {/* Recent Orders */}
-                <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-                  <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
                     <h3 className="font-bold text-gray-800">
                       Recent Orders
                     </h3>
@@ -348,37 +281,11 @@ const onLogout = async () => {
                     </button>
                   </div>
 
-                  <div className="space-y-4">
-                    {orders.map((order: any, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-0"
-                      >
-                        <div>
-                          <p className="text-sm font-semibold text-gray-800">
-                            {order.id}
-                          </p>
-
-                          <p className="text-xs text-gray-400">
-                            {order.customer}
-                          </p>
-                        </div>
-
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-gray-800">
-                            {order.total}
-                          </p>
-
-                          <span className="text-xs font-medium text-[#D7192D]">
-                            {order.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <RecentOrders orders={orders} />
                 </div>
               </div>
             </>
+          
          ) : activeTab === 'Products' ? (
           <ProductManagement
             products={productList}
@@ -395,6 +302,15 @@ const onLogout = async () => {
             onDelete={deleteProduct}
             onCreateBrand={createBrand}
             onCreateCategory={createCategory}
+          />
+           ) : activeTab === 'Orders' ? (
+          <OrderManagement
+            orders={adminOrders}
+            isLoading={ordersLoading}
+            updatingOrderId={updatingOrderId}
+            error={ordersError}
+            onRefresh={loadOrders}
+            onUpdateStatus={handleUpdateOrderStatus}
           />
         ) : (
           /* Other Tabs */
