@@ -11,8 +11,6 @@ import type {
   ProductFormData,
   ProductVariant,
   VariantFormData,
-  DashboardOrder,
-  DashboardProduct,
 } from '../models/Admin';
 
 type NameDescriptionInput = {
@@ -59,22 +57,6 @@ export function useAdminController() {
     { label: 'Shipped', value: 22.8 },
     { label: 'Processing', value: 13.9 },
     { label: 'Pending', value: 11.2 },
-  ];
-
-  const products: DashboardProduct[] = [
-    { id: 1, name: 'Air Jordan Legacy', units: 186, revenue: 942 },
-    { id: 2, name: 'Air Zoom Pulse', units: 142, revenue: 881 },
-    { id: 3, name: 'Air Jordan Flow', units: 118, revenue: 409 },
-    { id: 4, name: 'Superstar Street', units: 97, revenue: 953 },
-    { id: 5, name: 'Messi', units: 87, revenue: 907 },
-  ];
-
-  const orders: DashboardOrder[] = [
-    { id: 10234, customer: 'Jether Aguatani', product: 'Air Jordan Legacy x1', amount: 7383, status: 'Paid' },
-    { id: 10235, customer: 'Jether Aguatani', product: 'Air Zoom Pulse x1', amount: 2383, status: 'Shipped' },
-    { id: 10236, customer: 'Jether Aguatani', product: 'Air Jordan Flow x1', amount: 3383, status: 'Processing' },
-    { id: 10237, customer: 'Jether Aguatani', product: 'Superstar Street x1', amount: 1383, status: 'Paid' },
-    { id: 10238, customer: 'Jether Aguatani', product: 'Messi x1', amount: 2383, status: 'Paid' },
   ];
 
   // Product management state
@@ -770,13 +752,6 @@ const updateProduct = async (
   };
 
   return {
-    // Dashboard
-    stats,
-    revenueData,
-    salesStatus,
-    products,
-    orders,
-
     // Product management state
     productList,
     brands,
